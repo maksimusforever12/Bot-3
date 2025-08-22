@@ -5,6 +5,7 @@ from aiogram.types import Update
 import yt_dlp
 from aiogram import html
 
+# Получение переменных окружения
 TOKEN = os.environ.get('TOKEN')
 if not TOKEN:
     raise ValueError("Переменная окружения TOKEN не установлена")
@@ -13,6 +14,7 @@ RENDER_SERVICE_NAME = os.environ.get('RENDER_SERVICE_NAME')
 if not RENDER_SERVICE_NAME:
     raise ValueError("Переменная окружения RENDER_SERVICE_NAME не установлена")
 
+# Инициализация FastAPI и aiogram
 app = FastAPI()
 bot = Bot(TOKEN)
 dp = Dispatcher()
@@ -59,7 +61,7 @@ async def webhook_handler(request: Request, token: str):
         raise HTTPException(status_code=403, detail="Invalid token")
     update_data = await request.json()
     telegram_update = Update(**update_data)
-    await dp.process_update(telegram_update)
+    await dp.feed_update(bot, telegram_update)  # Исправлено: process_update -> feed_update
     return {"status": "ok"}
 
 @app.on_event("startup")
