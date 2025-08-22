@@ -1,17 +1,19 @@
-# Используем официальный образ Python 3.11 slim для минимизации размера
+# Используем официальный образ Python
 FROM python:3.11-slim
 
-# Устанавливаем рабочую директорию внутри контейнера
+# Установка зависимостей
 WORKDIR /app
-
-# Копируем файлы requirements.txt, main.py и cookies.txt
-COPY requirements.txt main.py cookies.txt ./
-
-# Устанавливаем зависимости из requirements.txt
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Открываем порт 8000 для веб-приложения
-EXPOSE 8000
+# Копирование кода
+COPY . .
 
-# Команда для запуска приложения с помощью gunicorn и uvicorn
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "main:app", "--bind", "0.0.0.0:8000", "--timeout", "15"]
+# Установка yt-dlp
+RUN pip install yt-dlp
+
+# Настройка переменной окружения
+ENV BOT_TOKEN=${BOT_TOKEN}
+
+# Команда для запуска
+CMD ["python", "bot.py"]
