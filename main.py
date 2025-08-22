@@ -25,7 +25,10 @@ def get_direct_link(video_url):
         'quiet': True,
         'no_warnings': True,
         'outtmpl': '%(id)s.%(ext)s',
-        'merge_output_format': 'mp4'
+        'merge_output_format': 'mp4',
+        'cookies': '/app/cookies.txt',  # Путь к файлу cookies в контейнере
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',  # Эмуляция браузера
+        'geo_bypass': True,  # Обход географических ограничений
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -61,7 +64,7 @@ async def webhook_handler(request: Request, token: str):
         raise HTTPException(status_code=403, detail="Invalid token")
     update_data = await request.json()
     telegram_update = Update(**update_data)
-    await dp.feed_update(bot, telegram_update)  # Исправлено: process_update -> feed_update
+    await dp.feed_update(bot, telegram_update)
     return {"status": "ok"}
 
 @app.on_event("startup")
