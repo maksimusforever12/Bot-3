@@ -4,8 +4,8 @@ FROM python:3.11-slim
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем файлы requirements.txt и main.py
-COPY requirements.txt main.py ./
+# Копируем файлы requirements.txt, main.py и cookies.txt
+COPY requirements.txt main.py cookies.txt ./
 
 # Устанавливаем зависимости из requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
